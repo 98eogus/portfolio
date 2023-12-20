@@ -144,27 +144,7 @@ comment: <input type="text" name="comment"/>
         });
     });
 
-    let toHtml = function (comments) {
-        let tmp = "<ul>";
 
-        comments.forEach(function (comment){
-            tmp+='<li data-cno=' + comment.cno
-            tmp+=' data-pcno=' + comment.pcno
-            tmp+=' data-bno=' + comment.bno + '>'
-            if(comment.cno!=comment.pcno)
-                tmp+='ㄴ'
-            tmp+=' commenter=<span class ="commenter">' + comment.commenter + '</span>'
-            tmp+=' comment=<span class ="comment">' + comment.comment + '</span>'
-            tmp+=' up_date='+comment.up_date
-            tmp+=' <button class="delBtn">삭제</button>'
-            tmp+=' <button class="modBtn">수정</button>'
-            tmp+=' <button class="replyBtn">답글</button>'
-            tmp+='</li>'
-        })
-
-        return tmp + "</ul>"
-        
-    }
 
 
 </script>

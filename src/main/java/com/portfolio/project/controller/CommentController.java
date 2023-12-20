@@ -62,8 +62,8 @@ public class CommentController {
     @DeleteMapping("/comments/{cno}")  // DELETE /comments/1?bno=1085  <-- 삭제할 댓글 번호
     //@ResponseBody
     public ResponseEntity<String> remove(@PathVariable Integer cno, Integer bno, HttpSession session) {
-        //String commenter = (String)session.getAttribute("id");
-       String commenter = "asdf";
+        String commenter = (String)session.getAttribute("id");
+
 
         try {
             int rowCnt = service.remove(cno, bno, commenter);

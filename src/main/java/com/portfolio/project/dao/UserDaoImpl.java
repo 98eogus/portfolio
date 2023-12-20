@@ -54,8 +54,7 @@ public class UserDaoImpl implements UserDao {
                 user.setName(rs.getString(3));
                 user.setEmail(rs.getString(4));
                 user.setBirth(new Date(rs.getDate(5).getTime()));
-                user.setSns(rs.getString(6));
-                user.setReg_date(new Date(rs.getTimestamp(7).getTime()));
+                user.setReg_date(new Date(rs.getTimestamp(6).getTime()));
             }
         }
 
@@ -66,7 +65,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int insertUser(User user) throws Exception {
         int rowCnt = 0;
-        String sql = "INSERT INTO user_info VALUES (?,?,?,?,?,?, now()) ";
+        String sql = "INSERT INTO user_info VALUES (?,?,?,?,?, now()) ";
 
         try(
                 Connection conn = ds.getConnection();
@@ -77,7 +76,7 @@ public class UserDaoImpl implements UserDao {
             pstmt.setString(3, user.getName());
             pstmt.setString(4, user.getEmail());
             pstmt.setDate(5, new java.sql.Date(user.getBirth().getTime()));
-            pstmt.setString(6, user.getSns());
+
 
             return pstmt.executeUpdate();
         }
@@ -88,7 +87,7 @@ public class UserDaoImpl implements UserDao {
         int rowCnt = 0;
 
         String sql = "UPDATE user_info " +
-                "SET pwd = ?, name=?, email=?, birth =?, sns=?, reg_date=? " +
+                "SET pwd = ?, name=?, email=?, birth =?, reg_date=? " +
                 "WHERE id = ? ";
 
         try (
@@ -99,9 +98,9 @@ public class UserDaoImpl implements UserDao {
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getEmail());
             pstmt.setDate(4, new java.sql.Date(user.getBirth().getTime()));
-            pstmt.setString(5, user.getSns());
-            pstmt.setTimestamp(6, new java.sql.Timestamp(user.getReg_date().getTime()));
-            pstmt.setString(7, user.getId());
+
+            pstmt.setTimestamp(5, new java.sql.Timestamp(user.getReg_date().getTime()));
+            pstmt.setString(6, user.getId());
 
             rowCnt = pstmt.executeUpdate();
         }
