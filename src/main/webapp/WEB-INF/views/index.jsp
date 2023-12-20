@@ -35,7 +35,7 @@
         &nbsp;&nbsp;5) Action Tag include - Layout Template  <br>
         &nbsp;&nbsp;6) mysql <br>
         &nbsp;&nbsp;7) 게시판 paging처리 <br>
-        &nbsp;&nbsp;8) Ajax로 배너구현 <br>
+        &nbsp;&nbsp;8) Ajax로 댓글, 배너구현 <br>
         <br>
         <br>
         <br>
@@ -69,7 +69,9 @@
 
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 <script type="text/javascript">
-
+    let msg = "${msg}";
+    if(msg=="REG_OK")  alert("회원가입 성공");
+    if(msg=="REG_ERR")  alert("회원가입 실패");
     let bannerIndex=0;
     let bannerList=[];
 

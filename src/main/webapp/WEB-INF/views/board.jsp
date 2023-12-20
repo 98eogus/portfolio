@@ -11,6 +11,8 @@
 
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <jsp:include page="/WEB-INF/views/common/header.jsp"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofmGfM5T5OK91W8RjQVtgM+PXTK3E0PuU" crossorigin="anonymous">
+
     <style>
 
 
@@ -288,82 +290,82 @@
 
 
 <script>
-    let bno = ${boardDto.bno};
 
-    let showList = function(bno){
+
+    let createCommentItem = function(comment, bno) {
+        var commentItem = $("<div>").addClass("comment-item")
+            .attr("data-cno", comment.cno)
+            .attr("data-pcno", comment.pcno)
+            .attr("data-bno", bno);
+
+        var commentImg = $("<span>").addClass("comment-img");
+
+        if (comment.pcno == comment.cno) {
+            commentImg.html('<i class="fa fa-user-circle" aria-hidden="true"></i>');
+        } else {
+            commentImg.html('<i class="fa fa-comment-dots" aria-hidden="true"></i>');
+        }
+
+        var commentArea = $("<div>").addClass("comment-area");
+        var commenter = $("<div>").addClass("commenter").text(comment.commenter);
+        var commentContent = $("<div>").addClass("comment-content").text(comment.comment);
+        var commentBottom = $("<div>").addClass("comment-bottom");
+
+        var timestamp = comment.up_date;
+        var date = new Date(timestamp);
+        var formattedDate = date.getFullYear() + "." +
+            ("0" + (date.getMonth() + 1)).slice(-2) + "." +
+            ("0" + date.getDate()).slice(-2) + " " +
+            ("0" + date.getHours()).slice(-2) + ":" +
+            ("0" + date.getMinutes()).slice(-2) + ":" +
+            ("0" + date.getSeconds()).slice(-2);
+
+        var upDate = $("<span>").addClass("up_date").text(formattedDate);
+
+
+
+
+        var btnWrite = $('<a href="javascript:void(0);" class="btn-replyWrite" data-cno="' + comment.cno + '" data-bno="' + bno + '" data-pcno="' + comment.pcno + '">답글쓰기</a>');
+        var btnModify = $('<a href="javascript:void(0);" class="btn-modify" data-cno="' + comment.cno + '" data-bno="' + bno + '" data-pcno="' + comment.pcno + '" >수정</a>');
+        var btnDelete = $('<a href="#" class="btn-delete"  data-cno="' + comment.cno + '" data-bno="' + bno + '" data-pcno="' + comment.pcno + '">삭제</a>');
+
+        if (comment.pcno == comment.cno) {
+            commentBottom.append(upDate, btnWrite, btnModify, btnDelete);
+        } else {
+            commentBottom.append(upDate, btnModify, btnDelete);
+        }
+        commentArea.append(commenter, commentContent, commentBottom);
+        commentItem.append(commentImg, commentArea);
+
+        return commentItem;
+    };
+
+    let showList = function(bno) {
         $.ajax({
-            type:'GET',       // 요청 메서드
-            url: '${pageContext.request.contextPath}/comments?bno='+bno,  // 요청 URI
-            dataType : 'json', // 전송받을 데이터의 타입
-            success : function(result){
+            type: 'GET',
+            url: '${pageContext.request.contextPath}/comments?bno=' + bno,
+            dataType: 'json',
+            success: function(result) {
                 var commentList = result;
 
                 for (var i = 0; i < commentList.length; i++) {
-                    if (commentList[i].pcno == commentList[i].cno) {
-                        // 새로운 댓글 항목을 만듭니다.
-                        var commentItem = $("<div>").addClass("comment-item")
-                            .attr("data-cno", commentList[i].cno)  // 필요에 따라 값을 조정하세요.
-                            .attr("data-bno", bno);
-
-                        // 댓글 이미지 추가
-                        var commentImg = $("<span>").addClass("comment-img")
-                            .html('<i class="fa fa-user-circle" aria-hidden="true"></i>');
-                        commentItem.append(commentImg);
-
-                        // 댓글 영역 추가
-                        var commentArea = $("<div>").addClass("comment-area");
-
-                        // 댓글 작성자 추가 (여기서는 임의의 값인 "asdf"를 사용)
-                        var commenter = $("<div>").addClass("commenter").text(commentList[i].commenter);
-                        commentArea.append(commenter);
-
-                        // 댓글 내용 추가
-                        var commentContent = $("<div>").addClass("comment-content");
-                        commentContent.text(commentList[i].comment);
-                        commentArea.append(commentContent);
-
-                        // 댓글 하단 영역 추가
-                        var commentBottom = $("<div>").addClass("comment-bottom");
-
-                        // 날짜 추가
-                        // 가정: commentList[i].up_date는 밀리초 단위의 타임스탬프입니다.
-                        var timestamp = commentList[i].up_date;
-                        var date = new Date(timestamp);
-
-                        // 날짜를 "YYYY.MM.DD HH:mm:ss" 형식으로 포맷합니다.
-                        var formattedDate = date.getFullYear() + "." +
-                            ("0" + (date.getMonth() + 1)).slice(-2) + "." +
-                            ("0" + date.getDate()).slice(-2) + " " +
-                            ("0" + date.getHours()).slice(-2) + ":" +
-                            ("0" + date.getMinutes()).slice(-2) + ":" +
-                            ("0" + date.getSeconds()).slice(-2);
-
-                        // 포맷된 날짜로 span 엘리먼트를 생성합니다.
-                        var upDate = $("<span>").addClass("up_date").text(formattedDate);
-                        commentBottom.append(upDate);
-
-                        // 버튼들 추가
-                        var btnWrite = $('<a href="#" class="btn-write" data-cno="' + commentList[i].cno + '" data-bno="' + bno + '" data-pcno="' + commentList[i].pcno + '">답글쓰기</a>');
-                        var btnModify = $('<a href="#" class="btn-modify" data-cno="' + commentList[i].cno + '" data-bno="' + bno + '" data-pcno="' + commentList[i].pcno + '">수정</a>');
-                        var btnDelete = $('<a href="#" class="btn-delete" data-cno="' + commentList[i].cno + '" data-bno="' + bno + '" data-pcno="' + commentList[i].pcno + '">삭제</a>');
-
-                        commentBottom.append(btnWrite, btnModify, btnDelete);
-
-                        // 댓글 영역에 하단 영역 추가
-                        commentArea.append(commentBottom);
-
-                        // 댓글 항목을 컨테이너에 추가
-                        $(".container").append(commentItem.append(commentArea));
-                    }
+                    $(".container").append(createCommentItem(commentList[i], bno));
                 }
             },
+            error: function() {
+                alert("Error");
+            }
+        });
+    };
 
-            error : function(){ alert(result) } // 에러가 발생했을 때, 호출될 함수
-        }); // $.ajax()
-    }
 
     $(document).ready(function(){
+        let bno = ${boardDto != null ? boardDto.bno : -1};
+        console.log(bno);
+
         showList(bno);
+
+
         let formCheck = function() {
             let form = document.getElementById("form");
             if(form.title.value=="") {
@@ -447,40 +449,137 @@
                 success : function(result){
                     alert(result);
                     $("textarea[name=comment]").val('');
-                   showList(bno);
+                    showList(bno);
                 },
                 error   : function(){ alert("error") } // 에러가 발생했을 때, 호출될 함수
             }); // $.ajax()
         });
 
+        //**************댓글 삭제하기
+
+        $(document).on("click", ".btn-delete", function() {
+
+
+            console.log("Delete button clicked");
+            let cno = $(this).attr("data-cno");
+            let bno = $(this).attr("data-bno");
+            console.log("cno:", cno, "bno:", bno);
+
+            $.ajax({
+                type:'DELETE',
+                url: '${pageContext.request.contextPath}/comments/'+cno+'?bno='+bno,
+                success: function(result){
+                    alert(result);
+                    showList(bno);
+                },
+                error: function(){
+
+                    alert(result)
+
+                }
+            });
+        });
+
+        //******************댓글 수정하기
+
+        $(document).on("click", ".btn-modify", function() {
+            // 클릭한 버튼이 속한 댓글 항목을 찾음
+            var commentItem = $(this).closest(".comment-item");
+
+            // 필요한 정보 추출
+            var cno = $(this).attr("data-cno");
+            var bno = $(this).attr("data-bno");
+            var pcno = $(this).attr("data-pcno");
+            console.log("cno"+cno, "bno"+bno, "pcno"+pcno);
+            // 댓글 내용 추출
+            var commentContent = $(".comment-content", commentItem).text();
+
+            // 수정할 내용을 input 태그로 바꿈
+            var inputComment = $("<input>")
+                .attr("type", "text")
+                .addClass("modified-comment")
+                .val(commentContent);
+
+            // 댓글 내용을 수정할 input 태그로 교체
+            $(".comment-content", commentItem).html(inputComment);
+
+            // 수정 완료 버튼 추가
+            var btnUpdate = $('<a href="javascript:void(0);" class="btn-update">완료</a>');
+            $(".comment-bottom", commentItem).append(btnUpdate);
+
+
+            // 완료 버튼 클릭 이벤트 처리
+            btnUpdate.click(function() {
+                // 수정된 내용을 가져옴
+                var updatedComment = inputComment.val();
+
+                // 서버에 수정된 내용 전송 (여기에 Ajax 요청 추가)
+                $.ajax({
+                    type:'PATCH',       // 요청 메서드
+                    url: '${pageContext.request.contextPath}/comments/'+cno,  // 요청 URI
+                    headers : { "content-type": "application/json"}, // 요청 헤더
+                    data : JSON.stringify({cno:cno, comment:updatedComment}),  // 서버로 전송할 데이터. stringify()로 직렬화 필요.
+                    success : function(result){
+                        $(".comment-content", commentItem).text(updatedComment);
+                    },
+                    error   : function(){ alert("error") } // 에러가 발생했을 때, 호출될 함수
+                }); // $.ajax()
+
+                // 완료 버튼 삭제
+                btnUpdate.remove();
+            });
+        });
+
+        //***************답글쓰기
+
+        $(document).on("click", ".btn-replyWrite", function() {
+            // 여기서 필요한 변수들을 설정하고, 예를 들어 id, bno, pcno, comment 등을 가져옵니다.
+            var bno = $(this).attr("data-bno");
+            var pcno = $(this).attr("data-pcno");
+
+
+            // 새로운 댓글 작성 양식을 생성
+            var replyWriteBox = $("<div>").attr("id", "comment-writebox")
+                .append($("<div>").addClass("commenter commenter-writebox").text("${id}"))
+                .append($("<div>").addClass("comment-writebox-content")
+                    .append($("<textarea>").attr({ "name": "comment", "cols": "30", "rows": "3", "placeholder": "답글을 남겨보세요" }))
+                )
+                .append($("<div>").attr("id", "comment-writebox-bottom")
+                    .append($("<div>").addClass("register-box").css("display", "flex").css("justify-content", "flex-end")
+                        .append($("<a>").attr("href", "#").addClass("btn").attr("id", "btn-write-reply").text("등록"))
+                    )
+                );
+
+            // 댓글 작성 양식을 페이지에 추가
+            var commentItem = $(this).closest(".comment-item");
+            commentItem.append(replyWriteBox);
+
+            // 답글 등록 버튼의 클릭 이벤트 핸들러를 설정
+            $("#btn-write-reply").on("click", function() {
+                comment = $("textarea[name=comment]", replyWriteBox).val();
+                console.log("comment=" + comment);
+
+                $.ajax({
+                    type:'POST',       // 요청 메서드
+                    url: '${pageContext.request.contextPath}/comments?bno='+bno , // 요청 URI
+                    headers : { "content-type": "application/json"}, // 요청 헤더
+                    data : JSON.stringify({pcno:pcno, bno:bno, comment:comment}),  // 서버로 전송할 데이터. stringify()로 직렬화 필요.
+                    success: function(result) {
+                        // 성공 시 할 일
+                        alert("작성완료");
+                    },
+                    error: function() {
+                        alert("error");
+                    }
+                });
+
+                // 답글 작성 양식 숨기기 및 내용 초기화
+                replyWriteBox.css("display", "none");
+                $("textarea[name=comment]", replyWriteBox).val('');
+            });
+        });
+
     });
-
-    let toHtml = function (comments) {
-        let tmp = "<ul>";
-
-        comments.forEach(function (comment){
-            tmp+='<li data-cno=' + comment.cno
-            tmp+=' data-pcno=' + comment.pcno
-            tmp+=' data-bno=' + comment.bno + '>'
-            if(comment.cno!=comment.pcno)
-                tmp+='ㄴ'
-            tmp+=' commenter=<span class ="commenter">' + comment.commenter + '</span>'
-            tmp+=' comment=<span class ="comment">' + comment.comment + '</span>'
-            tmp+=' up_date='+comment.up_date
-            tmp+=' <button class="delBtn">삭제</button>'
-            tmp+=' <button class="modBtn">수정</button>'
-            tmp+=' <button class="replyBtn">답글</button>'
-            tmp+='</li>'
-        })
-
-        return tmp + "</ul>"
-
-    }
-
-
-
-
-
 
 </script>
 
