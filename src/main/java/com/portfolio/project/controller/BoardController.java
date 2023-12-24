@@ -1,5 +1,6 @@
 package com.portfolio.project.controller;
 
+import com.portfolio.project.aspect.MyAdvice;
 import com.portfolio.project.domain.BoardDto;
 import com.portfolio.project.domain.PageHandler;
 import com.portfolio.project.domain.SearchCondition;
@@ -21,6 +22,9 @@ import java.util.List;
 public class BoardController {
     @Autowired
     BoardService boardService;
+
+    @Autowired
+    MyAdvice myAdvice;
 
     @PostMapping("/modify")
     public String modify(BoardDto boardDto, Model m, HttpSession session, RedirectAttributes rattr){
@@ -114,9 +118,7 @@ public class BoardController {
 
     @GetMapping("/list")
     public String list(SearchCondition sc, Model m, HttpServletRequest request) {
-        if(!loginCheck(request))
-            return "redirect:/login/login?toURL="+request.getRequestURL();  // 로그인을 안했으면 로그인 화면으로 이동
-
+        System.out.println("list컨트롤러임");
 
         try {
             int totalCnt = boardService.getSearchResultCnt(sc);
