@@ -31,11 +31,10 @@
         &nbsp;&nbsp;2) Spring Data Mybatis <br>
         &nbsp;&nbsp;3) Spring AOP  - Session유무 체크 <br>
         &nbsp;&nbsp;&nbsp;&nbsp; : Board에 대한 접근은 인증된 사용자만 가능<br>
-        &nbsp;&nbsp;4) SimpleMappingExceptionResolver Bean등록 - 예외처리 <br>
-        &nbsp;&nbsp;5) Action Tag include - Layout Template  <br>
-        &nbsp;&nbsp;6) mysql <br>
-        &nbsp;&nbsp;7) 게시판 paging처리 <br>
-        &nbsp;&nbsp;8) Ajax로 댓글, 배너구현 <br>
+        &nbsp;&nbsp;4) Action Tag include - Layout Template  <br>
+        &nbsp;&nbsp;5) mysql <br>
+        &nbsp;&nbsp;6) 게시판 paging처리 <br>
+        &nbsp;&nbsp;7) Ajax로 댓글, 배너구현 <br>
         <br>
         <br>
         <br>

@@ -118,7 +118,6 @@ public class BoardController {
 
     @GetMapping("/list")
     public String list(SearchCondition sc, Model m, HttpServletRequest request) {
-        System.out.println("list컨트롤러임");
 
         try {
             int totalCnt = boardService.getSearchResultCnt(sc);
